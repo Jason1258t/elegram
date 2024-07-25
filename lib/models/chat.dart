@@ -4,10 +4,10 @@ class Chat {
   final String title;
   final String id;
   final String imageUrl;
-  final Message? lastMessage;
+  Message? lastMessage;
 
 //<editor-fold desc="Data Methods">
-  const Chat({
+Chat({
     required this.title,
     required this.id,
     required this.imageUrl,
