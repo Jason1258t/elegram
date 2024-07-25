@@ -1,5 +1,3 @@
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -7,8 +5,6 @@ import '../../../data/fetchCountryData.dart';
 import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 import '../../../widgets/button/primary_button.dart';
-
-
 
 class PhoneNumberInput extends StatefulWidget {
   const PhoneNumberInput({super.key});
@@ -50,23 +46,10 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
             },
           ),
           const SizedBox(height: 16),
-          TextField(
-            controller: _phoneController,
-            keyboardType: TextInputType.phone,
-            style: AppTypography.fontHeadlineW17w400,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              PhoneNumberFormatter(),
-            ],
-            decoration: InputDecoration(
-              prefixText: '${_countryCodes[_selectedCountry]} ',
-              labelText: 'Phone Number',
-              border: const OutlineInputBorder(),
-              hintText: '(***) *** **-**',
-              hintStyle: AppTypography.fontHeadlineW17w400,
-              labelStyle: AppTypography.fontHeadlineW17w400,
-            ),
-          ),
+          PhoneNumber(
+              phoneController: _phoneController,
+              countryCodes: _countryCodes,
+              selectedCountry: _selectedCountry),
           const SizedBox(height: 16),
           PrimaryButton(
             text: 'Login',
@@ -92,12 +75,50 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
   }
 }
 
+class PhoneNumber extends StatelessWidget {
+  const PhoneNumber({
+    super.key,
+    required TextEditingController phoneController,
+    required Map<String, String> countryCodes,
+    required String selectedCountry,
+  })  : _phoneController = phoneController,
+        _countryCodes = countryCodes,
+        _selectedCountry = selectedCountry;
+
+  final TextEditingController _phoneController;
+  final Map<String, String> _countryCodes;
+  final String _selectedCountry;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(
+      
+      controller: _phoneController,
+      keyboardType: TextInputType.phone,
+      style: AppTypography.fontHeadlineW17w400,
+      inputFormatters: [
+        FilteringTextInputFormatter.digitsOnly,
+        PhoneNumberFormatter(),
+      ],
+      decoration: InputDecoration(
+        prefixText: '${_countryCodes[_selectedCountry]} ',
+        labelText: 'Phone Number',
+        border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+        hintText: '(***) *** **-**',
+        hintStyle: AppTypography.fontHeadlineW17w400,
+        labelStyle: AppTypography.fontHeadlineW17w400,
+      ),
+    );
+  }
+}
+
 class CountryDropdown extends StatelessWidget {
   final List<String> countries;
   final String selectedCountry;
   final ValueChanged<String> onCountryChanged;
 
-  const CountryDropdown({super.key,
+  const CountryDropdown({
+    super.key,
     required this.countries,
     required this.selectedCountry,
     required this.onCountryChanged,
@@ -128,7 +149,7 @@ class CountryDropdown extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Country',
         labelStyle: AppTypography.fontHeadlineW17w400,
-        border: const OutlineInputBorder(),
+        border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
       ),
     );
   }
@@ -137,9 +158,9 @@ class CountryDropdown extends StatelessWidget {
 class PhoneNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue,
-      TextEditingValue newValue,
-      ) {
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     final text = newValue.text;
     if (text.length > 10) {
       return oldValue;
