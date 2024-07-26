@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:messenger_test/data/chat_loader.dart';
 import 'package:messenger_test/data/chat_repository.dart';
 import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
@@ -23,59 +24,23 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   MessengerBloc(this._repository) : super(MessengerInitial()) {
     on<InitializeMessengerEvent>(_initialize);
     on<ReceiveMessageEvent>(_receiveMessage);
+    on<MessengerLoadingEvent>(_onLoading);
+    on<MessengerReadyEvent>(_onReady);
   }
 
   _initialize(event, emit) async {
     _subscribeAuth();
-    _loadChats(emit);
+    _loadChats();
     _subscribeMessages();
   }
 
-  _loadChats(emit) async {
-    emit(MessengerLoadingState());
-    final chats = await _syncLoadChatsPreviews();
-    _sortChatsByMessageDate(chats);
+  _loadChats() async {
+    add(MessengerLoadingEvent());
+    final chats = await ChatsLoader(_repository).getChatsPreviews();
 
     _chats.clear();
-    _chats.addAll(_transformChatsListToMap(chats));
-    emit(MessengerReadyState(_chatsAsList));
-  }
-
-  Future<List<Chat>> _syncLoadChatsPreviews() async {
-    final chats = await _repository.getUserChats();
-    final List<Future> processes = [];
-
-    for (var chat in chats) {
-      processes.add(_loadChatLastMessage(chat));
-    }
-
-    await Future.wait(processes);
-    return chats;
-  }
-
-  Future _loadChatLastMessage(Chat chat) async {
-    final message = await _repository.getChatLastMessage(chat.id);
-    chat.lastMessage = message;
-  }
-
-  void _sortChatsByMessageDate(List<Chat> chats) {
-    chats.sort((a, b) {
-      DateTime? aDt, bDt;
-      if (a.lastMessage != null) aDt = a.lastMessage!.lastUpdate;
-      if (b.lastMessage != null) bDt = b.lastMessage!.lastUpdate;
-
-      return (aDt ?? DateTime(1900)).compareTo((bDt ?? DateTime(1900)));
-    });
-  }
-
-  Map<String, Chat> _transformChatsListToMap(List<Chat> chats) {
-    final chatsAsMap = <String, Chat>{};
-
-    for (var chat in chats) {
-      chatsAsMap[chat.id] = chat;
-    }
-
-    return chatsAsMap;
+    _chats.addAll(ChatsLoader.transformChatsListToMap(chats));
+    add(MessengerReadyEvent());
   }
 
   _subscribeAuth() {
@@ -95,12 +60,8 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
   }
 
   _receiveMessage(ReceiveMessageEvent event, emit) async {
-    if (_repository.chatCacheNotExist(event.message.chatId)) {
-      _repository
-          .addToCache(await _repository.getChatMessages(event.message.chatId));
-    } else {
-      _repository.addToCache([event.message]);
-    }
+    _repository.addToCache([event.message]);
+
     await _updateDisplayedChats(event.message);
     emit(MessengerReadyState(_chatsAsList));
   }
@@ -118,6 +79,12 @@ class MessengerBloc extends Bloc<MessengerEvent, MessengerState> {
     newChat.lastMessage = receivedMessage;
     _chats[chatId] = newChat;
   }
+
+  _onLoading(MessengerLoadingEvent event, emit) =>
+      emit(MessengerLoadingState());
+
+  _onReady(MessengerReadyEvent event, emit) =>
+      emit(MessengerReadyState(_chatsAsList));
 
   @override
   Future<void> close() {

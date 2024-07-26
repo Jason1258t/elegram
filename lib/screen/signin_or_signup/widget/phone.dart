@@ -10,7 +10,7 @@ class PhoneNumberInput extends StatefulWidget {
   const PhoneNumberInput({super.key});
 
   @override
-  _PhoneNumberInputState createState() => _PhoneNumberInputState();
+  createState() => _PhoneNumberInputState();
 }
 
 class _PhoneNumberInputState extends State<PhoneNumberInput> {

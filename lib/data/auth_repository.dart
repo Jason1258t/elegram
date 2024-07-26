@@ -10,6 +10,18 @@ class AuthRepository {
 
   AuthRepository(this._authService);
 
+  Future<bool> userExists(String phone) => _authService.userExists(phone);
+
+  Future<String> registerWithPhone(String phone) async {
+    _currentUserId = await _authService.registerByPhone(phone);
+    return _currentUserId!;
+  }
+
+  Future<String> loginWithPhone(String phone) async {
+    _currentUserId = await _authService.registerByPhone(phone);
+    return _currentUserId!;
+  }
+
   Future<String> loginWithEmailAndPassword(
       String email, String password) async {
     _currentUserId =
