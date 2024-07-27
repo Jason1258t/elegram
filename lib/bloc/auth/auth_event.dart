@@ -3,20 +3,28 @@ part of 'auth_bloc.dart';
 @immutable
 sealed class AuthEvent {}
 
-class LoginWithEmailAndPasswordEvent extends AuthEvent {
-  final String email;
-  final String password;
+class VerifyPhoneEvent extends AuthEvent {
+  final String phone;
 
-  LoginWithEmailAndPasswordEvent(this.email, this.password);
+  VerifyPhoneEvent(this.phone);
 }
 
-class RegisterWithEmailAndPasswordEvent extends AuthEvent {
-  final String email;
-  final String password;
+class VerifySMSCodeEvent extends AuthEvent {
+  final String code;
 
-  RegisterWithEmailAndPasswordEvent(this.email, this.password);
+  VerifySMSCodeEvent(this.code);
 }
 
 class LogoutEvent extends AuthEvent {}
+
+
+
+// Эти ивенты вызываются только из блока же
+
+class PhoneSuccessfulVerifiedEvent extends AuthEvent {}
+
+class CodeSentEvent extends AuthEvent {}
+
+class AuthErrorEvent extends AuthEvent {}
 
 class CheckAuthStateEvent extends AuthEvent {}

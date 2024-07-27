@@ -4,32 +4,10 @@ class AuthServiceMock implements AuthService {
   static const String mockUserId = 'mock_user';
 
   @override
-  Future<String> loginWithEmailAndPassword(
-      String email, String password) async {
-    return mockUserId;
-  }
-
-  @override
   Future<void> logout() async {}
 
   @override
-  Future<String> registerWithEmailAndPassword(
-      String email, String password) async {
-    return mockUserId;
-  }
-
-  @override
-  Future<String> loginWithPhone(String phone) async {
-    return mockUserId;
-  }
-
-  @override
-  Future<String> registerByPhone(String phone) async {
-    return mockUserId;
-  }
-
-  @override
-  Future<bool> userExists(String phone) async {
+  Future<bool> profileExists(String phone) async {
     return true; // TODO менять если нужны разные состояния того есть ли пользователь
   }
 

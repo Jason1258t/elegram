@@ -1,13 +1,5 @@
 abstract interface class AuthService {
-  Future<bool> userExists(String phone);
-
-  Future<String> registerByPhone(String phone);
-
-  Future<String> loginWithPhone(String phone);
-
-  Future<String> loginWithEmailAndPassword(String email, String password);
-
-  Future<String> registerWithEmailAndPassword(String email, String password);
+  Future<bool> profileExists(String phone);
 
   Future<void> verifyPhone(
       String phone,
@@ -21,4 +13,6 @@ abstract interface class AuthService {
 
   Future<void> logout();
 }
+
+enum VerificationStatusEnum { verified, error, codeSent, wrongCode }
 

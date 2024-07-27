@@ -1,39 +1,63 @@
 import 'dart:async';
 
+import 'package:messenger_test/bloc/auth/auth_bloc.dart';
 import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:messenger_test/utils/enums.dart';
+import 'package:messenger_test/utils/exceptions.dart';
+import 'package:rxdart/rxdart.dart';
 
-class AuthRepository {
+interface class AuthRepository {
   final AuthService _authService;
 
   String? _currentUserId;
+  String? _currentVerificationId;
 
   AuthRepository(this._authService);
 
-  Future<bool> userExists(String phone) => _authService.userExists(phone);
+  String? get userId => _currentUserId;
 
-  Future<String> registerWithPhone(String phone) async {
-    _currentUserId = await _authService.registerByPhone(phone);
-    return _currentUserId!;
+  Future<bool> profileExists() async {
+    if (_currentUserId == null) {
+     throw UserNotAuthorizedException();
+    }
+
+    return await _authService.profileExists(_currentUserId!);
   }
 
-  Future<String> loginWithPhone(String phone) async {
-    _currentUserId = await _authService.registerByPhone(phone);
-    return _currentUserId!;
+  Future<BehaviorSubject<VerificationStatusEnum>> verifyPhone(
+      String phone) async {
+    _currentVerificationId = null;
+
+    final BehaviorSubject<VerificationStatusEnum> stream = BehaviorSubject();
+
+    _authService.verifyPhone(phone, (credentials) async {
+      await _confirmAuthorizationWithCredentials(credentials);
+      stream.add(VerificationStatusEnum.verified);
+    }, (verificationId, resendToken) {
+      _currentVerificationId = verificationId;
+      stream.add(VerificationStatusEnum.codeSent);
+    }, (e) {
+      stream.add(VerificationStatusEnum.error);
+    });
+
+    return stream;
   }
 
-  Future<String> loginWithEmailAndPassword(
-      String email, String password) async {
-    _currentUserId =
-        await _authService.loginWithEmailAndPassword(email, password);
-    return _currentUserId!;
+  Future<VerificationStatusEnum> verifySMSCode(String code) async {
+    if (_currentVerificationId == null) throw NoVerificationIdException();
+
+    final credentials =
+        await _authService.confirmCode(_currentVerificationId!, code);
+    try {
+      await _confirmAuthorizationWithCredentials(credentials);
+      return VerificationStatusEnum.verified;
+    } catch (e) {
+      return VerificationStatusEnum.wrongCode;
+    }
   }
 
-  Future<String> registerWithEmailAndPassword(
-      String email, String password) async {
-    _currentUserId =
-        await _authService.registerWithEmailAndPassword(email, password);
-    return _currentUserId!;
+  Future<void> _confirmAuthorizationWithCredentials(dynamic credentials) async {
+    _currentUserId = await _authService.confirmCredentials(credentials);
   }
 
   Future<AuthStatesEnum> checkAuthState() async {
@@ -41,8 +65,6 @@ class AuthRepository {
 
     return AuthStatesEnum.auth;
   }
-
-  String? get userId => _currentUserId;
 
   void logout() {
     _currentUserId = null;
