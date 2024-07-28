@@ -2,7 +2,7 @@ import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
 import 'package:rxdart/rxdart.dart';
 
-abstract interface class ChatService {
+abstract interface class RemoteMessengerService {
   Future<List<Chat>> getAllUserChats(String userId);
 
   Future<Chat> getChatById(String id);

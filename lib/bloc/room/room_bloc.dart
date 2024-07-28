@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:messenger_test/data/chat_repository.dart';
+import 'package:messenger_test/data/messenger_repository.dart';
 import 'package:messenger_test/models/message.dart';
 import 'package:meta/meta.dart';
 
@@ -12,7 +12,7 @@ part 'room_state.dart';
 // TODO test while this bloc
 
 class RoomBloc extends Bloc<RoomEvent, RoomState> {
-  final ChatRepository _repository;
+  final MessengerRepository _repository;
   final List<Message> _messages = [];
   final String _chatId;
   late final StreamSubscription _subscription;

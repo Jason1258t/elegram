@@ -4,7 +4,7 @@ import 'package:messenger_test/services/remote/chat/chat_service.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:uuid/uuid.dart';
 
-class ChatServiceMock implements ChatService {
+class ChatServiceMock implements RemoteMessengerService {
   @override
   Future<List<Chat>> getAllUserChats(String userId) {
     // TODO: implement getAllUserChats

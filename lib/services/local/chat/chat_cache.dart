@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
 
-abstract interface class ChatCache {
+abstract interface class ChatCacheService {
   FutureOr<void> saveUserChats(List<Chat> chats);
 
   FutureOr<List<Chat>> getUserChats();
@@ -11,4 +11,6 @@ abstract interface class ChatCache {
   FutureOr<void> saveMessages(Map<String, List<Message>> messages);
 
   FutureOr<Map<String, List<Message>>> getMessages();
+
+  FutureOr<void> logout();
 }
