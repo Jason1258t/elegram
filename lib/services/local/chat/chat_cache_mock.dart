@@ -4,7 +4,7 @@ import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
 import 'package:messenger_test/services/local/chat/chat_cache.dart';
 
-class ChatCacheMock implements ChatCache {
+class ChatCacheMock implements ChatCacheService {
   @override
   FutureOr<Map<String, List<Message>>> getMessages() {
     return {};
@@ -20,4 +20,7 @@ class ChatCacheMock implements ChatCache {
 
   @override
   FutureOr<void> saveUserChats(List<Chat> chats) {}
+
+  @override
+  FutureOr<void> logout() {}
 }
