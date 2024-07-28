@@ -4,6 +4,8 @@ import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:messenger_test/utils/enums.dart';
 import 'package:meta/meta.dart';
 
+import '../../data/repository_with_authorize.dart';
+
 part 'auth_event.dart';
 
 part 'auth_state.dart';
@@ -11,7 +13,11 @@ part 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
-  AuthBloc(this._authRepository) : super(AuthInitial()) {
+  final List<RepositoryWithAuthorization>? repositories;
+
+  AuthBloc(AuthRepository authRepository, [this.repositories])
+      : _authRepository = authRepository,
+        super(AuthInitial()) {
     on<CheckAuthStateEvent>(_checkAuth);
     on<LogoutEvent>(_onLogout);
     on<VerifyPhoneEvent>(_verifyPhone);
@@ -24,7 +30,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   _checkAuth(CheckAuthStateEvent event, emit) async {
     final appState = await _authRepository.checkAuthState();
-    if (appState == AuthStatesEnum.auth) emit(AppAuthState());
+    if (appState == AuthStatesEnum.auth) {
+      final account = _authRepository.account!;
+
+      for (RepositoryWithAuthorization rep in repositories ?? []) {
+        rep.initialize(account);
+      }
+
+      emit(AppAuthState());
+    }
     if (appState == AuthStatesEnum.unAuth) emit(AppUnAuthState());
   }
 
@@ -44,10 +58,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
   }
 
+  /// Shows if you need to enter sms code
   _onCodeSent(CodeSentEvent event, emit) async {
     emit(NeedSMSCodeState());
   }
 
+  /// calls when user's phone verified, emits [AppAuthState] if it's login
+  /// and [RegisteredState] when it's registration
   _onVerified(PhoneSuccessfulVerifiedEvent event, emit) async {
     emit(AuthInProcessState());
     final profileExists = await _authRepository.profileExists();

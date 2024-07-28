@@ -1,4 +1,6 @@
 import 'package:messenger_test/data/chats_interpreter.dart';
+import 'package:messenger_test/data/repository_with_authorize.dart';
+import 'package:messenger_test/models/account.dart';
 import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
 import 'package:messenger_test/services/local/chat/chat_cache.dart';
@@ -9,9 +11,7 @@ import 'package:rxdart/subjects.dart';
 
 enum AuthEventsEnum { auth, logout }
 
-// TODO add rooms stream
-
-class MessengerRepository {
+class MessengerRepository implements RepositoryWithAuthorization {
   final RemoteMessengerService _remoteChatService;
   final ChatCacheService _chatCacheService;
 
@@ -34,8 +34,9 @@ class MessengerRepository {
     authEventsStream.add(AuthEventsEnum.logout);
   }
 
-  void initializeWithUser(String userId) async {
-    _userId = userId;
+  @override
+  void initialize(AccountData account) async {
+    _userId = account.userId;
     authEventsStream.add(AuthEventsEnum.auth);
   }
 

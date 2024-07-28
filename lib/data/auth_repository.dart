@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:messenger_test/bloc/auth/auth_bloc.dart';
+import 'package:messenger_test/models/account.dart';
 import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:messenger_test/utils/enums.dart';
 import 'package:messenger_test/utils/exceptions.dart';
@@ -15,6 +16,7 @@ interface class AuthRepository {
   AuthRepository(this._authService);
 
   String? get userId => _currentUserId;
+  AccountData? get account => AccountData(userId: userId!);
 
   Future<bool> profileExists() async {
     if (_currentUserId == null) {
@@ -24,6 +26,10 @@ interface class AuthRepository {
     return await _authService.profileExists(_currentUserId!);
   }
 
+
+  /// returns a stream with verification statuses, method will send
+  /// sms code to a provided number, which can be automatically verified
+  /// on android devices by auto sms receiving
   Future<BehaviorSubject<VerificationStatusEnum>> verifyPhone(
       String phone) async {
     _currentVerificationId = null;
@@ -61,7 +67,7 @@ interface class AuthRepository {
   }
 
   Future<AuthStatesEnum> checkAuthState() async {
-    // TODO implement validation, now we can sets here state what we need
+    // TODO implement validation, but now we can sets here state what we need
 
     return AuthStatesEnum.auth;
   }
