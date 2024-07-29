@@ -1,42 +1,45 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
 import '../../../utils/fonts.dart';
 
 class PhoneNumber extends StatelessWidget {
-  const PhoneNumber({
-    super.key,
-    required TextEditingController phoneController,
-    required Map<String, String> countryCodes,
-    required String selectedCountry,
-  })  : _phoneController = phoneController,
-        _countryCodes = countryCodes,
-        _selectedCountry = selectedCountry;
+  final TextEditingController phoneController;
+  final String selectedCountryCode;
 
-  final TextEditingController _phoneController;
-  final Map<String, String> _countryCodes;
-  final String _selectedCountry;
+  const PhoneNumber({super.key,
+    required this.phoneController,
+    required this.selectedCountryCode,
+  });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
-      controller: _phoneController,
+      controller: phoneController,
       keyboardType: TextInputType.phone,
-      style: AppTypography.fontHeadlineW17w400,
       inputFormatters: [
         FilteringTextInputFormatter.digitsOnly,
         _PhoneNumberFormatter(),
       ],
       decoration: InputDecoration(
-        prefixText: '${_countryCodes[_selectedCountry]} ',
+        prefixText: '$selectedCountryCode ',
         labelText: 'Phone Number',
-        border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(Radius.circular(12))),
         hintText: '(***) *** **-**',
         hintStyle: AppTypography.fontHeadlineW17w400,
         labelStyle: AppTypography.fontHeadlineW17w400,
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 1, style: BorderStyle.solid),
+          borderRadius: BorderRadius.all(Radius.circular(10)),
+        ),
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white, width: 3, style: BorderStyle.solid),
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+        ),
       ),
+      style: AppTypography.fontHeadlineW17w400,
     );
   }
 }
@@ -44,9 +47,9 @@ class PhoneNumber extends StatelessWidget {
 class _PhoneNumberFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
-    TextEditingValue oldValue,
-    TextEditingValue newValue,
-  ) {
+      TextEditingValue oldValue,
+      TextEditingValue newValue,
+      ) {
     final text = newValue.text;
     if (text.length > 10) {
       return oldValue;
@@ -68,15 +71,3 @@ class _PhoneNumberFormatter extends TextInputFormatter {
   }
 }
 
-void validatePhoneNumber(BuildContext context, String phoneNumber) {
-  final regex = RegExp(r'^\(\d{3}\) \d{3} \d{2}-\d{2}$');
-  if (regex.hasMatch(phoneNumber)) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Phone number is valid')),
-    );
-  } else {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Phone number is invalid')),
-    );
-  }
-}

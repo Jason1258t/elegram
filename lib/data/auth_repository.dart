@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:messenger_test/bloc/auth/auth_bloc.dart';
+
 import 'package:messenger_test/models/account.dart';
 import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:messenger_test/utils/enums.dart';

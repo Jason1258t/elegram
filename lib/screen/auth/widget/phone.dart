@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_test/screen/auth/widget/phone_number.dart';
+import 'package:country_picker/country_picker.dart';
+import 'package:messenger_test/screen/auth/widget/validate_phone_number.dart';
 
-
-
-import '../../../data/fetchCountryData.dart';
+import '../../../utils/fonts.dart';
 import '../../../widgets/button/primary_button.dart';
-import 'country_dropdown.dart';
+import 'country_selector.dart';
 
 class PhoneNumberInput extends StatefulWidget {
   const PhoneNumberInput({super.key});
@@ -16,18 +16,24 @@ class PhoneNumberInput extends StatefulWidget {
 
 class _PhoneNumberInputState extends State<PhoneNumberInput> {
   final TextEditingController _phoneController = TextEditingController();
-  String _selectedCountry = 'Error';
-  Map<String, String> _countryCodes = {};
+  String _selectedCountry = 'Russia';
+  String _selectedCountryCode = '+7';
+  String _selectedCountryIso = 'ru';
 
-  @override
-  void initState() {
-    super.initState();
-    fetchCountryData().then((data) {
-      setState(() {
-        _countryCodes = data;
-        _selectedCountry = data.keys.first;
-      });
-    });
+  void _selectCountry(BuildContext context) {
+    showCountryPicker(
+      context: context,
+      useSafeArea: true,
+      showPhoneCode: true,
+      onSelect: (Country country) {
+        setState(() {
+          _selectedCountry = country.name;
+          _selectedCountryCode = '+${country.phoneCode}';
+          _selectedCountryIso = country.countryCode.toLowerCase();
+          _phoneController.clear();
+        });
+      },
+    );
   }
 
   @override
@@ -37,31 +43,26 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          CountryDropdown(
-            countries: _countryCodes.keys.toList(),
+          CountrySelector(
             selectedCountry: _selectedCountry,
-            onCountryChanged: (newCountry) {
-              setState(() {
-                _selectedCountry = newCountry;
-              });
-            },
+            selectedCountryIso: _selectedCountryIso,
+            onTap: () => _selectCountry(context),
           ),
           const SizedBox(height: 16),
           PhoneNumber(
-              phoneController: _phoneController,
-              countryCodes: _countryCodes,
-              selectedCountry: _selectedCountry),
+            phoneController: _phoneController,
+            selectedCountryCode: _selectedCountryCode,
+          ),
           const SizedBox(height: 16),
           PrimaryButton(
             text: 'Login',
             press: () {
-              validatePhoneNumber(context, _phoneController.text);
+              validatePhoneNumber(
+                  context, '$_selectedCountryCode ${_phoneController.text}');
             },
           ),
         ],
       ),
     );
   }
-
-
 }
