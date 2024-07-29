@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_test/screen/welcome_screen/ui/onboarding_screen.dart';
+import 'package:messenger_test/screen/onboarding/onboarding.dart';
 import 'package:messenger_test/utils/colors.dart';
 
 

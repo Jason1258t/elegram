@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import 'package:messenger_test/utils/fonts.dart';
 
-import '../../../utils/assets.dart';
-import '../../signin_or_signup/ui/signin_or_signup_screen.dart';
+import '../../utils/assets.dart';
+import '../auth/auth.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -44,7 +44,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   onPressed: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => const SigninOrSignupScreen(),
+                      builder: (context) => const Auth(),
                     ),
                   ),
                   child: Row(

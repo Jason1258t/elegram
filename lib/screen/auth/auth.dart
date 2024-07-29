@@ -3,11 +3,11 @@ import 'package:lottie/lottie.dart';
 import 'package:messenger_test/utils/fonts.dart';
 
 
-import '../../../utils/assets.dart';
-import '../widget/phone.dart';
+import '../../utils/assets.dart';
+import 'widget/phone.dart';
 
-class SigninOrSignupScreen extends StatelessWidget {
-  const SigninOrSignupScreen({super.key});
+class Auth extends StatelessWidget {
+  const Auth({super.key});
 
   @override
   Widget build(BuildContext context) {
