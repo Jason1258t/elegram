@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../utils/colors.dart';
 import '../../../utils/fonts.dart';
 
 class CountrySelector extends StatelessWidget {
@@ -16,14 +17,16 @@ class CountrySelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Ink(
+
       decoration: ShapeDecoration(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: const BorderSide(color: Colors.white, width: 1),
+          side: const BorderSide(color: AppColors.activeButton, width: 2),
         ),
       ),
       width: double.infinity,
       child: InkWell(
+        splashColor: AppColors.activeButton,
         borderRadius: BorderRadius.circular(10),
         onTap: onTap,
         child: Padding(

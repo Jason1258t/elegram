@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_test/screen/auth/widget/phone_number.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:messenger_test/screen/auth/widget/search_Input_decoration.dart';
 import 'package:messenger_test/screen/auth/widget/validate_phone_number.dart';
+import 'package:messenger_test/utils/colors.dart';
+import 'package:messenger_test/utils/fonts.dart';
 
-import '../../../utils/fonts.dart';
-import '../../../widgets/button/primary_button.dart';
+import 'button_phone.dart';
 import 'country_selector.dart';
 
 class PhoneNumberInput extends StatefulWidget {
@@ -19,12 +21,35 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
   String _selectedCountry = 'Russia';
   String _selectedCountryCode = '+7';
   String _selectedCountryIso = 'ru';
+  bool _isButtonActive = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _phoneController.addListener(_updateButtonState);
+  }
+
+  void _updateButtonState() {
+    final phone = _phoneController.text;
+    final regex = RegExp(r'^\(\d{3}\) \d{3} \d{2}-\d{2}$');
+    setState(() {
+      _isButtonActive = regex.hasMatch(phone);
+    });
+  }
 
   void _selectCountry(BuildContext context) {
     showCountryPicker(
       context: context,
       useSafeArea: true,
       showPhoneCode: true,
+      countryListTheme: CountryListThemeData(
+        padding: const EdgeInsets.all(11),
+        bottomSheetHeight: 700,
+        backgroundColor: AppColors.mainBackground,
+        textStyle: AppTypography.fontHeadlineW17w400,
+        searchTextStyle: AppTypography.fontHeadlineW17w400,
+        inputDecoration: buildInputDecoration(),
+      ),
       onSelect: (Country country) {
         setState(() {
           _selectedCountry = country.name;
@@ -54,12 +79,15 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
             selectedCountryCode: _selectedCountryCode,
           ),
           const SizedBox(height: 16),
-          PrimaryButton(
+          PhoneButton(
             text: 'Login',
-            press: () {
-              validatePhoneNumber(
-                  context, '$_selectedCountryCode ${_phoneController.text}');
-            },
+            press: _isButtonActive
+                ? () {
+                    validatePhoneNumber(context,
+                        '$_selectedCountryCode ${_phoneController.text}');
+                  }
+                : null,
+            isActive: _isButtonActive,
           ),
         ],
       ),
