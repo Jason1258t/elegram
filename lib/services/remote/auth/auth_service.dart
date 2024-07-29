@@ -3,9 +3,9 @@ abstract interface class AuthService {
 
   Future<void> verifyPhone(
       String phone,
-      Function(dynamic) verificationCompleted,
-      Function(String, int?) onCodeSent,
-      Function(Exception)? onError);
+      {required Function(dynamic) verificationCompleted,
+      required Function(String, int?) onCodeSent,
+      Function(Exception)? onError});
 
   Future<String> confirmCode(String id, String code);
 
@@ -15,4 +15,3 @@ abstract interface class AuthService {
 }
 
 enum VerificationStatusEnum { verified, error, codeSent, wrongCode }
-

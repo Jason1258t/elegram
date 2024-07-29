@@ -1,6 +1,6 @@
 import 'dart:async';
+import 'dart:developer';
 
-import 'package:messenger_test/bloc/auth/auth_bloc.dart';
 import 'package:messenger_test/models/account.dart';
 import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:messenger_test/utils/enums.dart';
@@ -13,19 +13,19 @@ interface class AuthRepository {
   String? _currentUserId;
   String? _currentVerificationId;
 
-  AuthRepository(this._authService);
+  AuthRepository(AuthService authService) : _authService = authService;
 
   String? get userId => _currentUserId;
+
   AccountData? get account => AccountData(userId: userId!);
 
   Future<bool> profileExists() async {
     if (_currentUserId == null) {
-     throw UserNotAuthorizedException();
+      throw UserNotAuthorizedException();
     }
 
     return await _authService.profileExists(_currentUserId!);
   }
-
 
   /// returns a stream with verification statuses, method will send
   /// sms code to a provided number, which can be automatically verified
@@ -36,13 +36,14 @@ interface class AuthRepository {
 
     final BehaviorSubject<VerificationStatusEnum> stream = BehaviorSubject();
 
-    _authService.verifyPhone(phone, (credentials) async {
+    await _authService.verifyPhone(phone, verificationCompleted: (credentials) async {
       await _confirmAuthorizationWithCredentials(credentials);
       stream.add(VerificationStatusEnum.verified);
-    }, (verificationId, resendToken) {
+    }, onCodeSent: (verificationId, resendToken) {
       _currentVerificationId = verificationId;
       stream.add(VerificationStatusEnum.codeSent);
-    }, (e) {
+    }, onError: (e) {
+      log(e.toString());
       stream.add(VerificationStatusEnum.error);
     });
 

@@ -25,7 +25,7 @@ class MessengerRepository implements RepositoryWithAuthorization {
   final Map<String, List<Message>> _cachedMessages = {};
   String? _userId;
 
-  PublishSubject<AuthEventsEnum> authEventsStream = PublishSubject();
+  BehaviorSubject<AuthEventsEnum> authEventsStream = BehaviorSubject();
 
   void logout() {
     _cachedMessages.clear();

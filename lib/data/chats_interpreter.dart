@@ -35,7 +35,7 @@ class ChatsInterpreter {
 
   /// return date sorted list of chats
   Future<List<Chat>> _getChatsPreviews() async {
-    final chats = await _chatService.getAllUserChats(_userId!);
+    final chats = await _chatService.getAllUserChats(_userId);
     final List<Future> processes = [];
 
     for (var chat in chats) {
