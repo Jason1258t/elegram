@@ -4,13 +4,13 @@ import '../../../utils/fonts.dart';
 
 class PhoneButton extends StatelessWidget {
   final String text;
-  final VoidCallback? press;
+  final VoidCallback? onPress;
   final bool isActive;
 
   const PhoneButton({
     super.key,
     required this.text,
-    required this.press,
+    required this.onPress,
     this.isActive = false,
   });
 
@@ -21,11 +21,11 @@ class PhoneButton extends StatelessWidget {
         color: isActive ? AppColors.activeButton : AppColors.buttonColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-
         ),
       ),
       child: InkWell(
-        onTap: isActive ? press : null,
+        onTap: isActive ? onPress : null,
+        splashColor: AppColors.activeButton,
         borderRadius: BorderRadius.circular(10),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 16),

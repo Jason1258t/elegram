@@ -44,7 +44,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
       showPhoneCode: true,
       countryListTheme: CountryListThemeData(
         padding: const EdgeInsets.all(11),
-        bottomSheetHeight: 700,
+        bottomSheetHeight: MediaQuery.of(context).size.height*0.65,
         backgroundColor: AppColors.mainBackground,
         textStyle: AppTypography.fontHeadlineW17w400,
         searchTextStyle: AppTypography.fontHeadlineW17w400,
@@ -81,7 +81,7 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
           const SizedBox(height: 16),
           PhoneButton(
             text: 'Login',
-            press: _isButtonActive
+            onPress: _isButtonActive
                 ? () {
                     validatePhoneNumber(context,
                         '$_selectedCountryCode ${_phoneController.text}');
