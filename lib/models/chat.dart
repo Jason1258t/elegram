@@ -1,13 +1,15 @@
+import 'package:equatable/equatable.dart';
+
 import 'message.dart';
 
-class Chat {
+class Chat extends Equatable {
   final String title;
   final String id;
   final String imageUrl;
   Message? lastMessage;
 
 //<editor-fold desc="Data Methods">
-Chat({
+  Chat({
     required this.title,
     required this.id,
     required this.imageUrl,
@@ -61,9 +63,15 @@ Chat({
       title: map['title'] as String,
       id: map['id'] as String,
       imageUrl: map['imageUrl'] as String,
-      lastMessage: map['lastMessage'] as Message,
+      lastMessage: map['lastMessage'] != null
+          ? Message.fromMap(map['lastMessage'])
+          : null,
     );
   }
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [id, title, imageUrl];
 
 //</editor-fold>
 }

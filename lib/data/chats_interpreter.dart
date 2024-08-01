@@ -3,7 +3,6 @@ import 'package:messenger_test/models/message.dart';
 import 'package:messenger_test/services/remote/chat/chat_service.dart';
 import 'package:rxdart/rxdart.dart';
 
-
 /// Uses to interpret receiving messages as a rooms stream
 class ChatsInterpreter {
   final RemoteMessengerService _chatService;
@@ -20,17 +19,21 @@ class ChatsInterpreter {
         _userId = userId;
 
   Future<BehaviorSubject<List<Chat>>> getRoomsStream() async {
-    if (_roomsStreamInitialized) return _roomsStream;
+    if (!_roomsStreamInitialized) _initializeRoomsStream();
+    return _roomsStream;
+  }
 
+  void _initializeRoomsStream() {
     _roomsStream = BehaviorSubject<List<Chat>>();
     _roomsStreamInitialized = true;
+    _connectStream();
+  }
 
+  void _connectStream() async {
     final chats = await _getChatsPreviews();
     _roomsStream.add(chats);
 
     _subscribeMessagesForRoomsStream();
-
-    return _roomsStream;
   }
 
   /// return date sorted list of chats

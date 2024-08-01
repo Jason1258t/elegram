@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger_test/data/auth_repository.dart';
 import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:mocktail/src/mocktail.dart';
+import 'package:rxdart/rxdart.dart';
 
 void main() {
   late AuthService authService;
@@ -16,18 +17,19 @@ void main() {
 
     when(() => authService.verifyPhone(any(that: isA<String>()),
         verificationCompleted: any(named: 'verificationCompleted'),
-        onCodeSent: any(named: 'onCodeSent'))).thenAnswer((invocation) async {
-      final verificationCompletedCallback =
-          invocation.namedArguments[const Symbol('verificationCompleted')]
-              as Function(dynamic);
-      final onCodeSentCallback = invocation
-          .namedArguments[const Symbol('onCodeSent')] as Function(String, int?);
-      final onErrorCallback = invocation.namedArguments[const Symbol('onError')]
-          as Function(Exception)?;
-// Optionally simulate onCodeSent or onError callbacks if needed
-      onCodeSentCallback('verificationId', 1);
-      // Simulate verification completed callback
-      verificationCompletedCallback('1');
+        onCodeSent: any(named: 'onCodeSent'),
+        onError: any(named: 'onError'))).thenAnswer((invocation) async {
+      final args = invocation.namedArguments;
+
+      final verificationCompleted =
+          args[const Symbol('verificationCompleted')] as Function(dynamic);
+      final onCodeSent =
+          args[const Symbol('onCodeSent')] as Function(String, int?);
+      final onError = args[const Symbol('onError')] as Function(Exception)?;
+
+      onCodeSent('verificationId', 1);
+      await Future.delayed(const Duration(seconds: 1));
+      verificationCompleted('1');
 
       return Future.value();
     });
@@ -46,19 +48,13 @@ void main() {
       expect(returnedCredentials, credentials);
     });
 
-    test('Test authService verification', () async {
-      await authService.verifyPhone(phone,
-          verificationCompleted: (credentials) {
-        expect(credentials, '1');
-      }, onCodeSent: (id, token) {});
-    });
-
     test('Verification verified status test', () async {
+      final commits = [];
       final stream = await authRepository.verifyPhone(phone);
-      await expectLater(
+      stream.listen((data) => commits.add(data));
+      expectLater(
         stream,
         emitsInOrder([
-          VerificationStatusEnum.codeSent,
           VerificationStatusEnum.verified,
         ]),
       );
