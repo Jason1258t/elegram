@@ -5,11 +5,12 @@ import 'package:messenger_test/models/chat.dart';
 import 'package:messenger_test/models/message.dart';
 import 'package:messenger_test/services/local/chat/chat_cache.dart';
 import 'package:messenger_test/services/remote/chat/chat_service.dart';
+import 'package:messenger_test/utils/enums.dart';
 import 'package:messenger_test/utils/exceptions.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:rxdart/subjects.dart';
 
-enum AuthEventsEnum { auth, logout }
+
 
 class MessengerRepository implements RepositoryWithAuthorization {
   final RemoteMessengerService _remoteChatService;
@@ -25,7 +26,7 @@ class MessengerRepository implements RepositoryWithAuthorization {
   final Map<String, List<Message>> _cachedMessages = {};
   String? _userId;
 
-  PublishSubject<AuthEventsEnum> authEventsStream = PublishSubject();
+  BehaviorSubject<AuthEventsEnum> authEventsStream = BehaviorSubject();
 
   void logout() {
     _cachedMessages.clear();
