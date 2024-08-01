@@ -36,6 +36,12 @@ abstract class AppTypography {
     fontWeight: FontWeight.w400,
   );
 
+  static final fontHeadlineBlue17w400 = _font.copyWith(
+    color: AppColors.activeButton,
+    fontSize: 17,
+    fontWeight: FontWeight.w400,
+  );
+
   static final fontHeadline16w500 = _font.copyWith(
     fontSize: 15,
     fontWeight: FontWeight.w500,
