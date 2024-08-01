@@ -7,6 +7,7 @@ void validatePhoneNumber(BuildContext context, String phoneNumber) async {
     try {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Phone number $phoneNumber is valid and sent to the server')),
+
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

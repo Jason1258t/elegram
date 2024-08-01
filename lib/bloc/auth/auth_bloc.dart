@@ -1,86 +1,71 @@
 import 'package:bloc/bloc.dart';
-import 'package:messenger_test/data/auth_repository.dart';
-import 'package:messenger_test/services/remote/auth/auth_service.dart';
-import 'package:messenger_test/utils/enums.dart';
 import 'package:meta/meta.dart';
 
-import '../../data/repository_with_authorize.dart';
+import 'package:messenger_test/utils/enums.dart';
+
+
+import '../../data/auth_repository.dart';
+import '../../services/remote/auth/auth_service.dart';
 
 part 'auth_event.dart';
-
 part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository _authRepository;
 
-  final List<RepositoryWithAuthorization>? repositories;
-
-  AuthBloc(AuthRepository authRepository, [this.repositories])
-      : _authRepository = authRepository,
-        super(AuthInitial()) {
-    on<CheckAuthStateEvent>(_checkAuth);
+  AuthBloc(this._authRepository) : super(AuthInitial()) {
+    on<VerifyPhoneEvent>(_onVerifyPhone);
+    on<VerifySMSCodeEvent>(_onVerifySMSCode);
     on<LogoutEvent>(_onLogout);
-    on<VerifyPhoneEvent>(_verifyPhone);
-    on<CodeSentEvent>(_onCodeSent);
-    on<AuthErrorEvent>(_onError);
-    on<PhoneSuccessfulVerifiedEvent>(_onVerified);
-
-    add(CheckAuthStateEvent());
+    on<CheckAuthStateEvent>(_onCheckAuthState);
   }
 
-  _checkAuth(CheckAuthStateEvent event, emit) async {
-    final appState = await _authRepository.checkAuthState();
-    if (appState == AuthStatesEnum.auth) {
-      final account = _authRepository.account!;
-
-      for (RepositoryWithAuthorization rep in repositories ?? []) {
-        rep.initialize(account);
-      }
-
-      emit(AppAuthState());
+  void _onVerifyPhone(VerifyPhoneEvent event, Emitter<AuthState> emit) async {
+    emit(AuthInProcessState());
+    try {
+      final stream = await _authRepository.verifyPhone(event.phone);
+      await emit.forEach(
+        stream,
+        onData: (VerificationStatusEnum status) {
+          if (status == VerificationStatusEnum.verified) {
+            return AppAuthState();
+          } else if (status == VerificationStatusEnum.codeSent) {
+            return NeedSMSCodeState();
+          } else {
+            return AuthErrorState();
+          }
+        },
+      );
+    } catch (e) {
+      emit(AuthErrorState());
     }
-    if (appState == AuthStatesEnum.unAuth) emit(AppUnAuthState());
   }
 
-  _verifyPhone(VerifyPhoneEvent event, emit) async {
+  void _onVerifySMSCode(VerifySMSCodeEvent event, Emitter<AuthState> emit) async {
     emit(AuthInProcessState());
-    final stream = await _authRepository.verifyPhone(event.phone);
-
-    stream.listen((status) {
-      switch (status) {
-        case VerificationStatusEnum.verified:
-          add(PhoneSuccessfulVerifiedEvent());
-        case VerificationStatusEnum.codeSent:
-          add(CodeSentEvent());
-        default:
-          add(AuthErrorEvent());
+    try {
+      final status = await _authRepository.verifySMSCode(event.code);
+      if (status == VerificationStatusEnum.verified) {
+        emit(AppAuthState());
+      } else {
+        emit(AuthErrorState());
       }
-    });
+    } catch (e) {
+      emit(AuthErrorState());
+    }
   }
 
-  /// Shows if you need to enter sms code
-  _onCodeSent(CodeSentEvent event, emit) async {
-    emit(NeedSMSCodeState());
+  void _onLogout(LogoutEvent event, Emitter<AuthState> emit) async {
+    _authRepository.logout();
+    emit(AppUnAuthState());
   }
 
-  /// calls when user's phone verified, emits [AppAuthState] if it's login
-  /// and [RegisteredState] when it's registration
-  _onVerified(PhoneSuccessfulVerifiedEvent event, emit) async {
-    emit(AuthInProcessState());
-    final profileExists = await _authRepository.profileExists();
-
-    if (profileExists) {
+  void _onCheckAuthState(CheckAuthStateEvent event, Emitter<AuthState> emit) async {
+    final state = await _authRepository.checkAuthState();
+    if (state == AuthStatesEnum.auth) {
       emit(AppAuthState());
     } else {
-      emit(RegisteredState());
+      emit(AppUnAuthState());
     }
-  }
-
-  _onError(AuthErrorEvent event, emit) {
-    emit(AuthErrorState());
-  }
-
-  _onLogout(LogoutEvent event, emit) async {
-    _authRepository.logout();
   }
 }

@@ -6,6 +6,7 @@ import 'package:messenger_test/screen/auth/widget/validate_phone_number.dart';
 import 'package:messenger_test/utils/colors.dart';
 import 'package:messenger_test/utils/fonts.dart';
 
+import '../../verifySMS/verification_screen.dart';
 import 'button_phone.dart';
 import 'country_selector.dart';
 
@@ -83,9 +84,15 @@ class _PhoneNumberInputState extends State<PhoneNumberInput> {
             text: 'Login',
             onPress: _isButtonActive
                 ? () {
-                    validatePhoneNumber(context,
-                        '$_selectedCountryCode ${_phoneController.text}');
-                  }
+              validatePhoneNumber(context,
+                  '$_selectedCountryCode ${_phoneController.text}');
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const SMSVerificationScreen(),
+                ),
+              );
+            }
                 : null,
             isActive: _isButtonActive,
           ),

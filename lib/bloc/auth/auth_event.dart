@@ -17,8 +17,6 @@ class VerifySMSCodeEvent extends AuthEvent {
 
 class LogoutEvent extends AuthEvent {}
 
-
-
 // Эти ивенты вызываются только из блока же
 
 class PhoneSuccessfulVerifiedEvent extends AuthEvent {}
