@@ -14,7 +14,7 @@ class PhoneNumber extends StatefulWidget {
   });
 
   @override
-  _PhoneNumberState createState() => _PhoneNumberState();
+  createState() => _PhoneNumberState();
 }
 
 class _PhoneNumberState extends State<PhoneNumber> {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:messenger_test/screen/auth/widget/phone_number.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:messenger_test/screen/auth/widget/search_Input_decoration.dart';
+import 'package:messenger_test/screen/auth/widget/search_input_decoration.dart';
 import 'package:messenger_test/screen/auth/widget/validate_phone_number.dart';
 import 'package:messenger_test/utils/colors.dart';
 import 'package:messenger_test/utils/fonts.dart';
