@@ -1,5 +1,5 @@
 import 'package:messenger_test/models/chat.dart';
-import 'package:messenger_test/models/message.dart';
+import 'package:messenger_test/models/message/message.dart';
 import 'package:rxdart/rxdart.dart';
 
 abstract interface class RemoteMessengerService {

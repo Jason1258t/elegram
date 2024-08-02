@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:messenger_test/data/messenger_repository.dart';
-import 'package:messenger_test/models/message.dart';
+import 'package:messenger_test/models/message/message.dart';
 import 'package:meta/meta.dart';
 
 part 'room_event.dart';

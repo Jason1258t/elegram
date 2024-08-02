@@ -1,9 +1,9 @@
 import 'package:equatable/equatable.dart';
 
-import 'message.dart';
+import 'message/message.dart';
 
 // ignore: must_be_immutable
-class Chat extends Equatable {
+interface class Chat extends Equatable {
   final String title;
   final String id;
   final String imageUrl;

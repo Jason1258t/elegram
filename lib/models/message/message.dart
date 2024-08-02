@@ -1,12 +1,11 @@
 import 'package:equatable/equatable.dart';
+import 'package:messenger_test/models/message/message_statuses.dart';
 import 'package:messenger_test/utils/extensions/string_to_enum.dart';
 import 'package:uuid/uuid.dart';
 
-enum MessageStatusEnum { preparing, sent, read }
 
-enum MessageSendActionsEnum { sent, edited }
 
-class Message extends Equatable {
+interface class Message extends Equatable {
   final String id;
   final String text;
   final String authorId;

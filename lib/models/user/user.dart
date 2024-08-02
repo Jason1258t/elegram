@@ -7,15 +7,16 @@ class User extends Equatable {
   final String phone;
   final String bio;
   final String imageUrl;
+  final DateTime lastSeen;
 
-  const User({
-    required this.id,
-    required this.phone,
-    required this.bio,
-    required this.nickname,
-    required this.username,
-    required this.imageUrl,
-  });
+  const User(
+      {required this.id,
+      required this.phone,
+      required this.bio,
+      required this.nickname,
+      required this.username,
+      required this.imageUrl,
+      required this.lastSeen});
 
   Map<String, dynamic> toMap() {
     return {
@@ -24,7 +25,8 @@ class User extends Equatable {
       'username': username,
       'imageUrl': imageUrl,
       'phone': phone,
-      'bio': bio
+      'bio': bio,
+      'lastSeen': lastSeen.toIso8601String()
     };
   }
 
@@ -35,9 +37,11 @@ class User extends Equatable {
         username: map['username'] as String,
         imageUrl: map['imageUrl'] as String,
         phone: map['phone'],
+        lastSeen: DateTime.parse(map['lastSeen']),
         bio: map['bio']);
   }
 
   @override
-  List<Object?> get props => [id, username, nickname, bio, phone, imageUrl];
+  List<Object?> get props =>
+      [id, username, nickname, bio, phone, imageUrl, lastSeen];
 }

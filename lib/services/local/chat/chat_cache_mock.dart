@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:messenger_test/models/chat.dart';
-import 'package:messenger_test/models/message.dart';
+import 'package:messenger_test/models/message/message.dart';
 import 'package:messenger_test/services/local/chat/chat_cache.dart';
 
 class ChatCacheMock implements ChatCacheService {

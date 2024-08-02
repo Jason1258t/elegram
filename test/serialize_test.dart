@@ -1,15 +1,17 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:messenger_test/models/chat.dart';
-import 'package:messenger_test/models/message.dart';
-import 'package:messenger_test/models/user.dart';
+import 'package:messenger_test/models/message/message.dart';
+import 'package:messenger_test/models/message/message_statuses.dart';
+import 'package:messenger_test/models/user/user.dart';
 
 void main() {
-  const user = User(
+  final user = User(
       id: '1',
       phone: '+79999999999',
       bio: 'bio',
       nickname: 'nickname',
       username: 'username',
+      lastSeen: DateTime.now(),
       imageUrl: 'imageUrl');
 
   final message = Message(
