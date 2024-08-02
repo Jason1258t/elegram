@@ -28,6 +28,7 @@ class MessengerRepository implements RepositoryWithAuthorization {
 
   BehaviorSubject<AuthEventsEnum> authEventsStream = BehaviorSubject();
 
+  @override
   void logout() {
     _cachedMessages.clear();
     _userId = null;
