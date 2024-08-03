@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 import 'package:messenger_test/screen/verifySMS/widget/text_field_verification.dart';
-import 'package:messenger_test/utils/fonts.dart';
-
-import '../../bloc/auth/auth_bloc.dart';
 import '../../utils/assets.dart';
 import '../auth/widget/button_phone.dart';
 import '../auth/widget/search_Input_decoration.dart';
-import '../auth/widget/validate_phone_number.dart';
+import '../create_new_account/create_account.dart';
+
 
 class SMSVerificationScreen extends StatefulWidget {
   const SMSVerificationScreen({super.key});
@@ -29,7 +25,7 @@ class _SMSVerificationScreenState extends State<SMSVerificationScreen> {
 
   void _updateButtonState() {
     final phone = _smsController.text;
-    final regex = RegExp(r'^\d{0,3}-?\d{0,3}$');
+    final regex = RegExp(r'^\d{3}-\d{3}$');
     setState(() {
       _isButtonActive = regex.hasMatch(phone);
     });
@@ -58,7 +54,12 @@ class _SMSVerificationScreenState extends State<SMSVerificationScreen> {
               const SizedBox(height: 16),
               PhoneButton(
                 text: 'Verification',
-                onPress: _isButtonActive ? () {} : null,
+                onPress: _isButtonActive ? () => Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateNewAccount(),
+                  ),
+                ) : null,
                 isActive: _isButtonActive,
               ),
             ],

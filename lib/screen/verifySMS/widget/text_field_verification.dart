@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:messenger_test/utils/fonts.dart';
@@ -20,7 +19,6 @@ class TextFieldVerification extends StatelessWidget {
       decoration: decoration,
       textAlign: TextAlign.center,
       inputFormatters: [
-        FilteringTextInputFormatter.allow(RegExp(r'^\d{0,3}-?\d{0,3}$')),
         LengthLimitingTextInputFormatter(7), // maximum length including hyphen
         _PhoneNumberFormatter(),
       ],
@@ -32,21 +30,29 @@ class TextFieldVerification extends StatelessWidget {
 
 class _PhoneNumberFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    final text = newValue.text;
+  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
 
-    if (text.length > 7) {
+    final String newText = newValue.text;
+
+    if (newText.length > 7) {
       return oldValue;
     }
 
-    String newText = text;
-    if (text.length > 3 ) {
-      newText = '${text.substring(0, 3)}-${text.substring(3)}';
+
+    final String digitsOnly = newText.replaceAll(RegExp(r'\D'), '');
+
+
+    String formattedText;
+    if (digitsOnly.length <= 3) {
+      formattedText = digitsOnly;
+    } else {
+      formattedText = '${digitsOnly.substring(0, 3)}-${digitsOnly.substring(3)}';
     }
+
+
     return TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newText.length),
+      text: formattedText,
+      selection: TextSelection.collapsed(offset: formattedText.length),
     );
   }
 }
