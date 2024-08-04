@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:messenger_test/data/messenger_repository.dart';
-import 'package:messenger_test/models/chat.dart';
+import 'package:messenger_test/models/chat/chat.dart';
 import 'package:messenger_test/utils/enums.dart';
 import 'package:meta/meta.dart';
 

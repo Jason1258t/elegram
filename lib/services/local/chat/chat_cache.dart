@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:messenger_test/models/chat.dart';
+import 'package:messenger_test/models/chat/chat.dart';
 import 'package:messenger_test/models/message/message.dart';
 
 abstract interface class ChatCacheService {

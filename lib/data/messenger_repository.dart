@@ -1,7 +1,7 @@
 import 'package:messenger_test/data/chats_interpreter.dart';
 import 'package:messenger_test/data/repository_with_authorize.dart';
 import 'package:messenger_test/models/account.dart';
-import 'package:messenger_test/models/chat.dart';
+import 'package:messenger_test/models/chat/chat.dart';
 import 'package:messenger_test/models/message/message.dart';
 import 'package:messenger_test/services/local/chat/chat_cache.dart';
 import 'package:messenger_test/services/remote/chat/chat_service.dart';
