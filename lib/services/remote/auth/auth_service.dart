@@ -16,6 +16,10 @@ abstract interface class AuthService {
   Future<void> logout();
 
   Future<void> registerUserProfile(User user);
+
+  Future<bool> authorized();
+
+  Future<String> currentUserId();
 }
 
 enum VerificationStatusEnum { verified, error, codeSent, wrongCode }
