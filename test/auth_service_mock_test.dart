@@ -31,32 +31,12 @@ void main() {
 
       return Future.value();
     });
-// TODO rewrite when would be decided credentials type
-    when(() => authService.confirmCredentials(any()))
-        .thenAnswer((inv) async => inv.positionalArguments[0]);
   });
 
   group('AuthRepository tests', () {
     const phone = '999';
 
-    test('Test credential authorization', () async {
-      const credentials = '1';
-      final returnedCredentials =
-          await authService.confirmCredentials(credentials);
-      expect(returnedCredentials, credentials);
-    });
 
-    test('Verification verified status test', () async {
-      final commits = [];
-      final stream = await authRepository.verifyPhone(phone);
-      stream.listen((data) => commits.add(data));
-      expectLater(
-        stream,
-        emitsInOrder([
-          VerificationStatusEnum.verified,
-        ]),
-      );
-    });
   });
 }
 

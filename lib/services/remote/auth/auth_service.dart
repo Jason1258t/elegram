@@ -1,5 +1,7 @@
+import 'package:messenger_test/models/user/user.dart';
+
 abstract interface class AuthService {
-  Future<bool> profileExists(String phone);
+  Future<bool> profileExists(String id);
 
   Future<void> verifyPhone(
       String phone,
@@ -12,6 +14,8 @@ abstract interface class AuthService {
   Future<String> confirmCredentials(dynamic credentials);
 
   Future<void> logout();
+
+  Future<void> registerUserProfile(User user);
 }
 
 enum VerificationStatusEnum { verified, error, codeSent, wrongCode }
