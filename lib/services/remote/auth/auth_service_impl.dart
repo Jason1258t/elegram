@@ -53,4 +53,14 @@ class FirebaseAuthService implements AuthService {
   Future<void> registerUserProfile(User user) async {
     await _users.doc(user.id).set(user.toMap());
   }
+
+  @override
+  Future<bool> authorized() async {
+    return _auth.currentUser != null;
+  }
+
+  @override
+  Future<String> currentUserId() async {
+    return _auth.currentUser!.uid;
+  }
 }

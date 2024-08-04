@@ -36,7 +36,8 @@ interface class AuthRepository {
 
     final BehaviorSubject<VerificationStatusEnum> stream = BehaviorSubject();
 
-    await _authService.verifyPhone(phone, verificationCompleted: (credentials) async {
+    await _authService.verifyPhone(phone,
+        verificationCompleted: (credentials) async {
       await _confirmAuthorizationWithCredentials(credentials);
       stream.add(VerificationStatusEnum.verified);
     }, onCodeSent: (verificationId, resendToken) {
@@ -68,9 +69,13 @@ interface class AuthRepository {
   }
 
   Future<AuthStatesEnum> checkAuthState() async {
-    // TODO implement validation, but now we can sets here state what we need
+    if (await _authService.authorized()) {
+      _currentUserId = await _authService.currentUserId();
 
-    return AuthStatesEnum.auth;
+      return AuthStatesEnum.auth;
+    } else {
+      return AuthStatesEnum.unAuth;
+    }
   }
 
   void logout() {
