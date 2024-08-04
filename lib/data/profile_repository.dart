@@ -1,6 +1,7 @@
 import 'package:messenger_test/data/repository_with_authorize.dart';
 import 'package:messenger_test/models/account.dart';
 import 'package:messenger_test/models/user/user.dart';
+import 'package:messenger_test/models/user/user_view.dart';
 import 'package:messenger_test/services/remote/users/users_service.dart';
 import 'package:messenger_test/utils/exceptions.dart';
 
@@ -11,7 +12,7 @@ class ProfileRepository implements RepositoryWithAuthorization {
 
   AccountData? _account;
   User? _currentUser;
-  final List<User> _contacts = [];
+  final List<UserViewData> _contacts = [];
 
   @override
   void initialize(AccountData account) {
@@ -41,11 +42,6 @@ class ProfileRepository implements RepositoryWithAuthorization {
     return _currentUser!;
   }
 
-  Future<void> createUserProfile(User user) async {
-    _guardAuth();
-    await _usersService.createUserProfile(user);
-  }
-
   Future<void> editUserProfile(User newUserData) async {
     _guardAuth();
 
@@ -53,7 +49,7 @@ class ProfileRepository implements RepositoryWithAuthorization {
     getUserProfile();
   }
 
-  Future<List<User>> getUserContacts() async {
+  Future<List<UserViewData>> getUserContacts() async {
     _guardAuth();
 
     if (_contacts.isEmpty) {
@@ -62,14 +58,14 @@ class ProfileRepository implements RepositoryWithAuthorization {
     return _contacts;
   }
 
-  Future<void> addToContacts(User user) async {
+  Future<void> addToContacts(UserViewData user) async {
     _guardAuth();
 
     await _usersService.addContact(_account!.userId, user.id);
     _contacts.add(user);
   }
 
-  Future<void> removeFromContacts(User user) async {
+  Future<void> removeFromContacts(UserViewData user) async {
     _guardAuth();
 
     await _usersService.removeFromContacts(_account!.userId, user.id);

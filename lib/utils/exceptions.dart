@@ -11,3 +11,14 @@ class UserNotAuthorizedException implements Exception {
     return 'User not authorized yet';
   }
 }
+
+class UserNotFoundException implements Exception {
+  final String? message;
+
+  UserNotFoundException({this.message});
+
+  @override
+  String toString() {
+    return 'User not found, message: $message';
+  }
+}

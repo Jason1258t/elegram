@@ -1,6 +1,6 @@
 import 'package:messenger_test/data/repository_with_authorize.dart';
 import 'package:messenger_test/models/account.dart';
-import 'package:messenger_test/models/user/user.dart';
+import 'package:messenger_test/models/user/user_view.dart';
 import 'package:messenger_test/services/remote/users/users_service.dart';
 
 class UsersRepository implements RepositoryWithAuthorization {
@@ -9,7 +9,7 @@ class UsersRepository implements RepositoryWithAuthorization {
   UsersRepository(UsersService usersService) : _usersService = usersService;
 
   AccountData? _account;
-  final Map<String, User> _cachedUsers = {};
+  final Map<String, UserViewData> _cachedUsers = {};
 
 
   @override
@@ -24,15 +24,15 @@ class UsersRepository implements RepositoryWithAuthorization {
   }
 
   /// Use for showing preview
-  User? getCachedUser(String userId) => _cachedUsers[userId];
+  UserViewData? getCachedUser(String userId) => _cachedUsers[userId];
 
-  Future<User> getUserData(String userId) async {
-    final user = await _usersService.getUserById(userId);
+  Future<UserViewData> getUserData(String userId) async {
+    final user = await _usersService.getUserViewById(userId);
     _cachedUsers[userId] = user;
     return user;
   }
 
-  Future<List<User>> searchUsers(String query) async {
+  Future<List<UserViewData>> searchUsers(String query) async {
     final result = await _usersService.searchUsers(query);
     return result;
   }
