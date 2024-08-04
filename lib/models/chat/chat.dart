@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import 'message/message.dart';
+import '../message/message.dart';
 
 // ignore: must_be_immutable
 interface class Chat extends Equatable {
@@ -55,7 +55,7 @@ interface class Chat extends Equatable {
       'title': title,
       'id': id,
       'imageUrl': imageUrl,
-      'lastMessage': lastMessage,
+      'lastMessage': lastMessage?.toMap(),
     };
   }
 
@@ -71,7 +71,6 @@ interface class Chat extends Equatable {
   }
 
   @override
-  // TODO: implement props
   List<Object?> get props => [id, title, imageUrl];
 
 //</editor-fold>

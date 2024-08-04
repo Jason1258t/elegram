@@ -1,14 +1,25 @@
 import 'package:messenger_test/models/user/user.dart';
 
 class UserViewData {
+  final String id;
   final String nickname;
   final DateTime lastSeen;
   final String username;
   final String imageUrl;
+  final String? phone;
 
-  UserViewData({required User user})
-      : nickname = user.nickname,
-        username = user.username,
-        lastSeen = user.lastSeen,
-        imageUrl = user.imageUrl;
+  UserViewData({required this.username,
+    required this.nickname,
+    required this.id,
+    required this.imageUrl,
+    required this.lastSeen, this.phone});
+
+  factory UserViewData.fromUser(User user, {bool showPhone = true}) {
+    return UserViewData(username: user.username,
+        nickname: user.nickname,
+        id: user.id,
+        imageUrl: user.imageUrl,
+        lastSeen: user.lastSeen,
+        phone: showPhone ? user.phone : null);
+  }
 }
