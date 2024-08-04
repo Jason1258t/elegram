@@ -4,16 +4,16 @@ import 'package:lottie/lottie.dart';
 import 'package:messenger_test/utils/fonts.dart';
 
 import '../../utils/assets.dart';
-import '../auth/auth.dart';
+import '../auth/auth_screen.dart';
 
-class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+class OboaringScreen extends StatefulWidget {
+  const OboaringScreen({super.key});
 
   @override
-  State<WelcomeScreen> createState() => _WelcomeScreenState();
+  State<OboaringScreen> createState() => _OboaringScreenState();
 }
 
-class _WelcomeScreenState extends State<WelcomeScreen> {
+class _OboaringScreenState extends State<OboaringScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
