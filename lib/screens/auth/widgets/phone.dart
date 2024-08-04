@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:messenger_test/screen/auth/widget/phone_number.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:messenger_test/screen/auth/widget/search_input_decoration.dart';
-import 'package:messenger_test/screen/auth/widget/validate_phone_number.dart';
 import 'package:messenger_test/utils/colors.dart';
 import 'package:messenger_test/utils/fonts.dart';
 
 import 'button_phone.dart';
 import 'country_selector.dart';
+import 'phone_number.dart';
+import 'search_input_decoration.dart';
+import 'validate_phone_number.dart';
 
 class PhoneNumberInput extends StatefulWidget {
   const PhoneNumberInput({super.key});

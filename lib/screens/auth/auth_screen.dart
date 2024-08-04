@@ -4,7 +4,7 @@ import 'package:messenger_test/utils/fonts.dart';
 
 
 import '../../utils/assets.dart';
-import 'widget/phone.dart';
+import 'widgets/phone.dart';
 
 class Auth extends StatelessWidget {
   const Auth({super.key});

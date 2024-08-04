@@ -1,4 +1,4 @@
-package com.example.messenger_test
+package com.elegram.messenger
 
 import io.flutter.embedding.android.FlutterActivity
 
