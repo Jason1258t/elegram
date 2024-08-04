@@ -5,7 +5,7 @@ import 'package:messenger_test/services/remote/auth/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart' hide User;
 import 'package:messenger_test/services/remote/firebase_collections.dart';
 
-class FirebaseAuthService implements AuthService {
+class AuthServiceImpl implements AuthService {
   final _auth = FirebaseAuth.instance;
   final _users = FirebaseCollections.users;
 
